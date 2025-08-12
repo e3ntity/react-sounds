@@ -82,7 +82,9 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
 
         const loop = options.loop !== undefined ? options.loop : false;
         if (options.volume !== undefined) howl.volume(options.volume);
-        if (options.rate !== undefined) howl.rate(options.rate);
+        if (options.rate !== undefined) {
+          howl.rate(options.rate);
+        }
         howl.loop(loop);
 
         const id = howl.play();
@@ -162,7 +164,45 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
     };
   }, [soundName]);
 
-  return { play, stop, pause, resume, isPlaying, isLoaded };
+  const setPlaybackRate = useCallback(
+    (rate: number) => {
+      ensureLoaded().then((howl) => {
+        howl.rate(rate);
+      });
+    },
+    [ensureLoaded]
+  );
+
+  const seek = useCallback(
+    (position: number | ((current: number) => number)) => {
+      ensureLoaded().then((howl) => {
+        const current = howl.seek() as number;
+        const newTime = typeof position === "number" ? position : position(current);
+        howl.seek(newTime);
+      });
+    },
+    [ensureLoaded]
+  );
+
+  const currentTime = useCallback(() => (soundRef.current ? (soundRef.current.seek() as number) : 0), []);
+
+  const duration = useCallback(() => (soundRef.current ? soundRef.current.duration() : 0), []);
+
+  const playbackRate = useCallback(() => (soundRef.current ? soundRef.current.rate() : 1), []);
+
+  return {
+    play,
+    stop,
+    pause,
+    resume,
+    isPlaying,
+    isLoaded,
+    currentTime,
+    duration,
+    playbackRate,
+    setPlaybackRate,
+    seek,
+  };
 }
 
 interface UseSoundOnChangeOptions extends SoundOptions {

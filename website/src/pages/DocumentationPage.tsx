@@ -401,6 +401,44 @@ function SoundPlayer() {
 }`}
         </CodeBlock>
 
+        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Playback State & Controls</h3>
+        <p className="text-gray-600 mb-2">
+          Access playback information and control position or speed on the fly.
+        </p>
+        <CodeBlock language="tsx">
+          {`const {
+  play,
+  pause,
+  currentTime,
+  duration,
+  playbackRate,
+  setPlaybackRate,
+  seek,
+} = useSound('ambient/rain');
+
+// Seek to an absolute position
+<input
+  type="range"
+  min={0}
+  max={duration()}
+  value={currentTime()}
+  onChange={(e) => seek(Number(e.target.value))}
+/>;
+
+// Seek relative to current time
+<button onClick={() => seek((t) => t + 5)}>Skip 5s</button>;
+
+// Adjust playback rate
+<select
+  value={playbackRate()}
+  onChange={(e) => setPlaybackRate(Number(e.target.value))}
+>
+  <option value={0.5}>0.5×</option>
+  <option value={1}>1×</option>
+  <option value={1.5}>1.5×</option>
+</select>;`}
+        </CodeBlock>
+
         <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">CLI Tool for Offline Sounds</h3>
         <p className="text-gray-600 mb-2">
           Use the CLI tool to download sounds for offline use or explore available sounds.
@@ -468,6 +506,11 @@ function PlaySounds() {
 //   resume: () => void;
 //   isPlaying: boolean;
 //   isLoaded: boolean;
+//   currentTime: () => number;
+//   duration: () => number;
+//   playbackRate: () => number;
+//   setPlaybackRate: (rate: number) => void;
+//   seek: (position: number | ((current: number) => number)) => void;
 // }`}
         </CodeBlock>
       </section>

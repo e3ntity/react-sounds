@@ -104,4 +104,29 @@ export interface SoundHookReturn {
    * Check if the sound is loaded
    */
   isLoaded: boolean;
+
+  /**
+   * Get the current playback time in seconds
+   */
+  currentTime: () => number;
+
+  /**
+   * Get the total duration of the sound in seconds
+   */
+  duration: () => number;
+
+  /**
+   * Get the current playback rate
+   */
+  playbackRate: () => number;
+
+  /**
+   * Set playback rate
+   */
+  setPlaybackRate: (rate: number) => void;
+
+  /**
+   * Seek to a position or relative offset
+   */
+  seek: (position: number | ((current: number) => number)) => void;
 }
