@@ -324,7 +324,7 @@ export async function checkAudioPermission(): Promise<AudioPermissionStatus> {
       if (!AudioCtx) return "unavailable";
       const tempCtx = new AudioCtx();
       state = tempCtx.state;
-      tempCtx.close().catch(() => {});
+      await tempCtx.close().catch(() => {});
     } catch {
       return "unavailable";
     }
