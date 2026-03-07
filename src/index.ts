@@ -1,5 +1,6 @@
 // Export core functionality
 export {
+  checkAudioPermission,
   fetchSoundBlob,
   getCDNUrl,
   isSoundEnabled,
@@ -18,6 +19,7 @@ export { Sound, SoundButton, SoundProvider } from "./components";
 
 // Export types
 export type {
+  AudioPermissionStatus,
   GameSoundName,
   LibrarySoundName,
   NotificationSoundName,
