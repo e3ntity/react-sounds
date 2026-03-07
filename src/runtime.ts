@@ -1,6 +1,6 @@
 import { Howl, Howler } from "howler";
 import manifest from "./manifest.json";
-import { LibrarySoundName, SoundOptions } from "./types";
+import { AudioPermissionStatus, LibrarySoundName, SoundOptions } from "./types";
 
 export type SoundName = LibrarySoundName | string;
 
@@ -304,6 +304,40 @@ export function initAudioContextUnlock(): () => void {
   return () => {
     events.forEach((event) => document.removeEventListener(event, handleInteraction));
   };
+}
+
+/**
+ * Check the browser's audio permission status.
+ * Uses AudioContext.state to determine if audio playback is allowed.
+ */
+export async function checkAudioPermission(): Promise<AudioPermissionStatus> {
+  if (typeof window === "undefined") return "unavailable";
+  if (Howler.noAudio) return "unavailable";
+
+  let state: string;
+
+  if (Howler.ctx) {
+    state = Howler.ctx.state;
+  } else {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return "unavailable";
+      const tempCtx = new AudioCtx();
+      state = tempCtx.state;
+      tempCtx.close().catch(() => {});
+    } catch {
+      return "unavailable";
+    }
+  }
+
+  switch (state) {
+    case "running":
+      return "granted";
+    case "suspended":
+      return "prompt";
+    default:
+      return "unavailable";
+  }
 }
 
 // Initialize sound state

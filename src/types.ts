@@ -52,6 +52,14 @@ export type LibrarySoundName =
   | `ui/${UiSoundName}`;
 
 /**
+ * Audio permission status returned by checkPermission()
+ * - 'granted': Audio context is running, playback allowed
+ * - 'prompt': Audio context is suspended, awaiting user interaction
+ * - 'unavailable': AudioContext is not supported or not available
+ */
+export type AudioPermissionStatus = 'granted' | 'prompt' | 'unavailable';
+
+/**
  * Sound options for playback
  */
 export interface SoundOptions {
@@ -104,4 +112,9 @@ export interface SoundHookReturn {
    * Check if the sound is loaded
    */
   isLoaded: boolean;
+
+  /**
+   * Check the browser's audio permission status
+   */
+  checkPermission: () => Promise<AudioPermissionStatus>;
 }

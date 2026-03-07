@@ -1,6 +1,6 @@
 import { Howl } from "howler";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { claimSound, freeSound, isSoundEnabled, preloadSounds, SoundName, unlockAudioContext } from "./runtime";
+import { checkAudioPermission, claimSound, freeSound, isSoundEnabled, preloadSounds, SoundName, unlockAudioContext } from "./runtime";
 import { SoundHookReturn, SoundOptions } from "./types";
 
 interface SoundContextType {
@@ -162,7 +162,9 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
     };
   }, [soundName]);
 
-  return { play, stop, pause, resume, isPlaying, isLoaded };
+  const checkPermission = useCallback(() => checkAudioPermission(), []);
+
+  return { play, stop, pause, resume, isPlaying, isLoaded, checkPermission };
 }
 
 interface UseSoundOnChangeOptions extends SoundOptions {
