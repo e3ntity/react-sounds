@@ -9,7 +9,7 @@ export function isLibrarySoundName(name: any): name is LibrarySoundName {
 }
 
 // Default CDN base URL
-let cdnBaseUrl = "https://reacticons.sfo3.cdn.digitaloceanspaces.com/v1";
+let cdnBaseUrl = "https://reactsounds.sfo3.cdn.digitaloceanspaces.com/v1";
 
 // Global sound enabled state
 let soundEnabledGlobal = true;

@@ -16,7 +16,7 @@ try {
 }
 
 // Get the CDN base URL
-const cdnBaseUrl = process.env.REACT_SOUNDS_CDN || "https://reacticons.sfo3.cdn.digitaloceanspaces.com/v1";
+const cdnBaseUrl = process.env.REACT_SOUNDS_CDN || "https://reactsounds.sfo3.cdn.digitaloceanspaces.com/v1";
 
 // Parse command line arguments
 const args = process.argv.slice(2);
