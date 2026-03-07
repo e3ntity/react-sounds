@@ -228,6 +228,7 @@ function SoundPlayer() {
     resume, // Function to resume a paused sound
     isPlaying, // Boolean indicating if sound is currently playing
     isLoaded,  // Boolean indicating if sound has been loaded
+    checkPermission, // Check browser audio permission status
   } = useSound('ui/button_1');
   
   // Using a custom sound file with options
@@ -357,6 +358,42 @@ setSoundEnabled(false);
 setSoundEnabled(true);`}
         </CodeBlock>
 
+        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Checking Audio Permission</h3>
+        <p className="text-gray-600 mb-2">
+          Check if the browser allows audio playback before attempting to play. This is useful for showing UI hints
+          or handling browsers that block autoplay.
+        </p>
+        <CodeBlock language="tsx">
+          {`import { checkAudioPermission } from 'react-sounds';
+import { useSound } from 'react-sounds';
+
+// Standalone usage
+async function checkAudio() {
+  const status = await checkAudioPermission();
+  // status is one of:
+  //   'granted'     - audio playback is allowed
+  //   'prompt'      - user may need to interact before audio works
+  //   'unavailable' - audio is not supported or blocked
+  console.log('Audio permission:', status);
+}
+
+// Via the useSound hook
+function SoundPlayer() {
+  const { play, checkPermission } = useSound('ui/button_1');
+
+  const handlePlay = async () => {
+    const status = await checkPermission();
+    if (status === 'granted') {
+      play();
+    } else {
+      console.log('Audio not available:', status);
+    }
+  };
+
+  return <button onClick={handlePlay}>Play Sound</button>;
+}`}
+        </CodeBlock>
+
         <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Preloading Sounds</h3>
         <p className="text-gray-600 mb-2">Preload sounds to ensure they are ready for immediate playback.</p>
         <CodeBlock language="tsx">
@@ -431,7 +468,8 @@ npx react-sounds-cli pick ui/click --output=./public/sounds`}
   LibrarySoundName,         // Union of all built-in sound categories
   UiSoundName,       // UI sounds (clicks, toggles, etc.)
   GameSoundName,     // Game sounds (achievements, actions, etc.)
-  NotificationSoundName // Notification sounds (alerts, success, etc.)
+  NotificationSoundName, // Notification sounds (alerts, success, etc.)
+  AudioPermissionStatus  // 'granted' | 'prompt' | 'unavailable'
 } from 'react-sounds';
 import customSound from '../assets/sounds/custom.mp3';
 
@@ -468,6 +506,7 @@ function PlaySounds() {
 //   resume: () => void;
 //   isPlaying: boolean;
 //   isLoaded: boolean;
+//   checkPermission: () => Promise<AudioPermissionStatus>;
 // }`}
         </CodeBlock>
       </section>
