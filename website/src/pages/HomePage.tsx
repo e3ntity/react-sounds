@@ -67,9 +67,9 @@ const HomePage: React.FC = () => {
       icon: "🪶",
     },
     {
-      title: "🔄 Lazy Loading",
+      title: "🏗️ Lazy Loading",
       description: "Sounds are fetched efficiently only when they are needed, improving initial load performance.",
-      icon: "🔄",
+      icon: "🏗️",
     },
     {
       title: "📦 Offline Support",
@@ -133,7 +133,7 @@ const HomePage: React.FC = () => {
             Get Started
           </Link>
           <a
-            href="https://github.com/aediliclabs/react-sounds"
+            href="https://github.com/e3ntity/react-sounds"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
@@ -180,7 +180,7 @@ const HomePage: React.FC = () => {
             Browse Sounds
           </Link>
           <a
-            href="https://github.com/aediliclabs/react-sounds"
+            href="https://github.com/e3ntity/react-sounds"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"

@@ -29,7 +29,7 @@ const Header: React.FC = () => {
             Docs
           </Link>
           <a
-            href="https://github.com/aediliclabs/react-sounds"
+            href="https://github.com/e3ntity/react-sounds"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-600 hover:text-gray-900"

@@ -66,7 +66,7 @@ const DocumentationPage: React.FC = () => {
             🪶 <strong>Lightweight</strong>: Only JS wrappers included; audio files hosted on CDN.
           </li>
           <li>
-            🔄 <strong>Lazy Loading</strong>: Sounds fetched only when needed.
+            🏗️ <strong>Lazy Loading</strong>: Sounds fetched only when needed.
           </li>
           <li>
             📦 <strong>Offline Support</strong>: Local sound files with automatic fallback to CDN.

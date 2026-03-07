@@ -20,7 +20,7 @@
 ## ✨ Why react-sounds?
 
 - 🪶 **Lightweight**: Only loads JS wrappers, audio files stay on CDN until needed
-- 🔄 **Lazy Loading**: Sounds are fetched only when they're used
+- 🏗️ **Lazy Loading**: Sounds are fetched only when they're used
 - 📦 **Offline Support**: Download sounds for self-hosting with the included CLI
 - 🎯 **Simple API**: Intuitive hooks and components
 - 🔊 **Extensive Library**: Hundreds of categorized sounds (UI, notification, game)
@@ -65,10 +65,4 @@ Works in all modern browsers that support the Web Audio API (Chrome, Firefox, Sa
 
 ## 📄 License
 
-MIT © Aedilic Inc.
-
----
-
-<p align="center">
-  Made with ♥ by <a href="https://aedilic.com" target="_blank">Aedilic Inc</a>
-</p>
+MIT © Lukas Schneider

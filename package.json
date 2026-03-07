@@ -1,6 +1,6 @@
 {
   "name": "react-sounds",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "A library of ready-to-play sound effects for React applications.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -22,7 +22,7 @@
     "sound-effects",
     "ui-sounds"
   ],
-  "author": "Lukas Schneider <lukas@aedilic.com>",
+  "author": "Lukas Schneider <lu.schneider@protonmail.com>",
   "license": "MIT",
   "peerDependencies": {
     "howler": "^2.2.3",
@@ -55,10 +55,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aediliclabs/react-sounds.git"
+    "url": "https://github.com/e3ntity/react-sounds.git"
   },
   "bugs": {
-    "url": "https://github.com/aediliclabs/react-sounds/issues"
+    "url": "https://github.com/e3ntity/react-sounds/issues"
   },
   "homepage": "https://reactsounds.com",
   "dependencies": {
