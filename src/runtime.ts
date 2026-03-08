@@ -340,6 +340,19 @@ export async function checkAudioPermission(): Promise<AudioPermissionStatus> {
   }
 }
 
+/**
+ * Reset all module-level state for testing purposes.
+ * @internal
+ */
+export function __resetForTesting(): void {
+  cdnBaseUrl = "https://reactsounds.sfo3.cdn.digitaloceanspaces.com/v1";
+  soundEnabledGlobal = true;
+  soundStateListeners.length = 0;
+  audioUnlockInitialized = false;
+  for (const key of Object.keys(soundBlobCache)) delete soundBlobCache[key];
+  for (const key of Object.keys(howlInstanceCache)) delete howlInstanceCache[key];
+}
+
 // Initialize sound state
 initSoundEnabledState();
 
