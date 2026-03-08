@@ -34,7 +34,7 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
   try {
     const soundContext = SoundContext ? useContext(SoundContext) : null;
     if (soundContext) enabled = soundContext.enabled;
-  } catch (e) {}
+  } catch (_e) { /* SoundContext may not be available */ }
 
   // Lazy loading approach - only load the sound when needed
   const ensureLoaded = useCallback(async (): Promise<Howl> => {

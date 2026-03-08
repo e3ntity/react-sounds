@@ -249,7 +249,7 @@ export async function getLocalSoundPath(name: SoundName): Promise<string | null>
     if (!response.headers.get("content-type")?.toLowerCase().startsWith("audio")) return null;
 
     return publicPath;
-  } catch (e) {}
+  } catch (_e) { /* local file not available */ }
 
   return null;
 }
@@ -287,7 +287,7 @@ export async function unlockAudioContext(): Promise<void> {
  * Can be called multiple times safely (will only set up listeners once)
  */
 export function initAudioContextUnlock(): () => void {
-  if (typeof window === "undefined" || audioUnlockInitialized) return () => {};
+  if (typeof window === "undefined" || audioUnlockInitialized) return () => { /* noop */ };
 
   audioUnlockInitialized = true;
 
@@ -324,7 +324,7 @@ export async function checkAudioPermission(): Promise<AudioPermissionStatus> {
       if (!AudioCtx) return "unavailable";
       const tempCtx = new AudioCtx();
       state = tempCtx.state;
-      await tempCtx.close().catch(() => {});
+      await tempCtx.close().catch(() => { /* ignore close errors */ });
     } catch {
       return "unavailable";
     }
