@@ -30,7 +30,7 @@ export default {
       tsconfig: "./tsconfig.json",
       exclude: ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"],
     }),
-    terser(),
+    terser({ output: { preamble: '"use client";' } }),
   ],
   external: ["react", "react-dom", "howler"],
 };
