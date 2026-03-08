@@ -1,9 +1,15 @@
-import { SoundProvider } from "react-sounds";
+"use client";
+import { SoundProvider, useSoundEnabled } from "react-sounds";
+
+function SoundStatus() {
+  const [enabled] = useSoundEnabled();
+  return <div>Sound: {enabled ? "on" : "off"}</div>;
+}
 
 export default function Page() {
   return (
     <SoundProvider>
-      <div>test</div>
+      <SoundStatus />
     </SoundProvider>
   );
 }
