@@ -1,0 +1,15 @@
+{
+  "name": "nextjs-integration-test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "howler": "^2.2.3",
+    "react-sounds": "file:../../../"
+  }
+}

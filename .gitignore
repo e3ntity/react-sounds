@@ -137,3 +137,4 @@ dist
 
 # custom
 .cursor/
+test/integration/nextjs/package-lock.json

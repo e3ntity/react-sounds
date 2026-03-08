@@ -1,6 +1,6 @@
 {
   "name": "react-sounds",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "A library of ready-to-play sound effects for React applications.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -13,7 +13,9 @@
     "lint": "eslint src",
     "generate-manifest": "node scripts/generate-manifest.js",
     "upload-to-cdn": "node scripts/upload-to-cdn.js",
-    "generate-types": "node scripts/generate-types.js"
+    "generate-types": "node scripts/generate-types.js",
+    "test": "vitest run",
+    "test:integration": "npm run build && cd test/integration/nextjs && npm install && npx next build"
   },
   "keywords": [
     "react",
@@ -34,16 +36,22 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
     "@types/howler": "^2.2.7",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",
     "aws-cli": "^0.0.2",
     "dotenv": "^16.5.0",
     "eslint": "^8.18.0",
+    "jsdom": "^28.1.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "rollup": "^2.75.6",
     "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.8.1",
     "typescript": "^4.7.4",
+    "vitest": "^4.0.18",
     "yargs": "^17.7.2"
   },
   "files": [
