@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { fetchSoundBlob, LibrarySoundName, useSound } from "react-sounds";
 import manifest from "../manifest.json";
+import { trackEvent } from "../utils/analytics";
 import { cn } from "../utils/cn";
 
 // Number of items per page
@@ -67,12 +68,14 @@ const SoundItem: React.FC<SoundItemProps> = ({ soundKey, metadata }) => {
       stop();
     } else {
       play();
+      trackEvent("sound_preview", { sound: soundKey, category });
     }
   };
 
   const copyToClipboard = (): void => {
     navigator.clipboard.writeText(soundKey).then(() => {
       setCopied(true);
+      trackEvent("sound_copy", { sound: soundKey, category });
       setTimeout(() => setCopied(false), 2000);
     });
   };
@@ -92,6 +95,7 @@ const SoundItem: React.FC<SoundItemProps> = ({ soundKey, metadata }) => {
       a.download = `${displayName || soundKey}.mp3`;
       document.body.appendChild(a);
       a.click();
+      trackEvent("sound_download", { sound: soundKey, category });
 
       // Clean up
       window.URL.revokeObjectURL(url);
@@ -297,6 +301,17 @@ const SoundLibraryPage: React.FC = () => {
   // Calculate pagination
   const totalPages = Math.ceil(filteredSounds.length / ITEMS_PER_PAGE);
   const paginatedSounds = filteredSounds.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  // Report searches that return nothing, once the user stops typing
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const hasNoResults = normalizedSearch !== "" && filteredSounds.length === 0;
+  useEffect(() => {
+    if (!hasNoResults) return;
+    const timeout = setTimeout(() => {
+      trackEvent("search_no_results", { search_term: normalizedSearch, category: selectedCategory || "all" });
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [hasNoResults, normalizedSearch, selectedCategory]);
 
   // Reset to first page when filters change
   useEffect(() => {

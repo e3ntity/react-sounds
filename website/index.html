@@ -22,15 +22,20 @@
     <meta property="og:url" content="https://react-sounds.com" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>react-sounds - Sound Effects for React</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-05DKE6DFEH"></script>
     <script>
+      // Google Analytics 4 measurement ID (Admin → Data streams → Web stream)
+      var GA_MEASUREMENT_ID = "G-6V278L2SYB";
+      var gaScript = document.createElement("script");
+      gaScript.async = true;
+      gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
+      document.head.appendChild(gaScript);
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
 
-      gtag("config", "G-05DKE6DFEH");
+      gtag("config", GA_MEASUREMENT_ID);
     </script>
   </head>
   <body>
