@@ -7,7 +7,6 @@
     "dev": "npm run build:lib && vite",
     "build": "rm -rf dist/ && npm run build:lib && npm run sync && vite build",
     "build:lib": "cd .. && npm install --legacy-peer-deps && npm run build",
-    "start": "serve -s dist",
     "sync": "cp ../src/manifest.json ../sounds/keywords.json ./src/",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -21,7 +20,6 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.2",
     "react-sounds": "file:..",
-    "serve": "^14.2.1",
     "tailwind-merge": "^3.2.0"
   },
   "devDependencies": {
