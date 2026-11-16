@@ -14,6 +14,7 @@ const { execSync } = require("child_process");
 const SOUNDS_DIR = path.resolve(__dirname, "../sounds");
 const OUTPUT_DIR = path.resolve(__dirname, "../src");
 const MANIFEST_FILE = path.join(OUTPUT_DIR, "manifest.json");
+const KEYWORDS_FILE = path.join(SOUNDS_DIR, "keywords.json");
 
 // Create output directory if it doesn't exist
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -87,6 +88,15 @@ async function generateManifest() {
       };
 
       console.log(`Added ${soundId} to manifest`);
+    }
+  }
+
+  // Warn about keywords for sounds that don't exist (e.g. after a rename)
+  if (fs.existsSync(KEYWORDS_FILE)) {
+    const keywords = JSON.parse(fs.readFileSync(KEYWORDS_FILE, "utf8"));
+    const unknown = Object.keys(keywords).filter((soundId) => !manifest.sounds[soundId]);
+    if (unknown.length > 0) {
+      console.warn(`keywords.json has entries for unknown sounds: ${unknown.join(", ")}`);
     }
   }
 

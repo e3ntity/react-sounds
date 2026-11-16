@@ -3,6 +3,7 @@ import { fetchSoundBlob, LibrarySoundName, useSound } from "react-sounds";
 import manifest from "../manifest.json";
 import { trackEvent } from "../utils/analytics";
 import { cn } from "../utils/cn";
+import { searchSounds } from "../utils/search";
 
 // Number of items per page
 const ITEMS_PER_PAGE = 30;
@@ -288,15 +289,10 @@ const SoundLibraryPage: React.FC = () => {
   const categories = useMemo(() => extractCategories(), []);
 
   // Filter sounds based on search and category
+  const searchResults = useMemo(() => searchSounds(searchTerm), [searchTerm]);
   const filteredSounds = useMemo(() => {
-    return Object.entries(manifest.sounds).filter(([soundKey]) => {
-      const matchesSearch = searchTerm === "" || soundKey.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesCategory = selectedCategory === "" || soundKey.startsWith(selectedCategory + "/");
-
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchTerm, selectedCategory]);
+    return searchResults.filter(([soundKey]) => selectedCategory === "" || soundKey.startsWith(selectedCategory + "/"));
+  }, [searchResults, selectedCategory]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredSounds.length / ITEMS_PER_PAGE);
@@ -304,7 +300,7 @@ const SoundLibraryPage: React.FC = () => {
 
   // Report searches that return nothing, once the user stops typing
   const normalizedSearch = searchTerm.trim().toLowerCase();
-  const hasNoResults = normalizedSearch !== "" && filteredSounds.length === 0;
+  const hasNoResults = normalizedSearch !== "" && searchResults.length === 0;
   useEffect(() => {
     if (!hasNoResults) return;
     const timeout = setTimeout(() => {
@@ -469,7 +465,16 @@ const SoundLibraryPage: React.FC = () => {
             />
           </svg>
           <h3 className="mt-2 text-lg font-medium text-gray-900">No sounds found</h3>
-          <p className="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+          {searchResults.length > 0 ? (
+            <p className="mt-1 text-gray-500">
+              {searchResults.length} {searchResults.length === 1 ? "match" : "matches"} in other categories.{" "}
+              <button onClick={() => setSelectedCategory("")} className="text-blue-600 hover:underline">
+                Search all categories
+              </button>
+            </p>
+          ) : (
+            <p className="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+          )}
         </div>
       )}
 

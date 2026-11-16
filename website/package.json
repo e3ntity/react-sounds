@@ -8,12 +8,13 @@
     "build": "rm -rf dist/ && npm run build:lib && npm run sync && vite build",
     "build:lib": "cd .. && npm install --legacy-peer-deps && npm run build",
     "start": "serve -s dist",
-    "sync": "cp ../src/manifest.json ./src/",
+    "sync": "cp ../src/manifest.json ../sounds/keywords.json ./src/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "fuse.js": "^7.1.0",
     "howler": "^2.2.4",
     "prismjs": "^1.30.0",
     "react": "^19.0.0",
