@@ -149,6 +149,15 @@ function Button() {
 }`}
         </CodeBlock>
 
+        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Using Sounds from a URL</h3>
+        <p className="text-gray-600 mb-2">
+          Any MP3 URL works too. If the file is on another domain, the server must send CORS headers (
+          <code className={cn("font-mono bg-gray-200 px-1 rounded")}>Access-Control-Allow-Origin</code>).
+        </p>
+        <CodeBlock language="tsx">
+          {`const { play } = useSound('https://cdn.example.com/sounds/whoosh.mp3');`}
+        </CodeBlock>
+
         <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">
           Direct Sound Playing with <code className={cn("font-mono bg-gray-200 px-1 rounded")}>playSound</code>
         </h3>
@@ -452,6 +461,64 @@ npx react-sounds-cli pick ui/click notification/success
 # Download sounds to a custom directory
 npx react-sounds-cli pick ui/click --output=./public/sounds`}
         </CodeBlock>
+
+        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Sound Packs</h3>
+        <p className="text-gray-600 mb-2">
+          A sound pack is a <code className={cn("font-mono bg-gray-200 px-1 rounded")}>manifest.json</code> that lists
+          MP3 files by name. Add one with the CLI, which also generates TypeScript types so pack sound names
+          autocomplete like built-in ones:
+        </p>
+        <CodeBlock language="bash">
+          {`# Use the pack's files from where they are hosted
+npx react-sounds-cli add https://example.com/packs/my-ui-pack/manifest.json
+
+# Or copy the files into your app (public/sounds/my-ui-pack)
+npx react-sounds-cli add https://example.com/packs/my-ui-pack/manifest.json --download`}
+        </CodeBlock>
+        <p className="text-gray-600 mb-2">
+          Register the pack once and play its sounds as <code className={cn("font-mono bg-gray-200 px-1 rounded")}>"pack-name/sound"</code>:
+        </p>
+        <CodeBlock language="tsx">
+          {`import { SoundProvider, useSound } from 'react-sounds';
+import myUiPack from './sounds/my-ui-pack.json';
+
+function App() {
+  return (
+    <SoundProvider packs={[myUiPack]}>
+      <SaveButton />
+    </SoundProvider>
+  );
+}
+
+function SaveButton() {
+  const { play } = useSound('my-ui-pack/save');
+  return <button onClick={() => play()}>Save</button>;
+}
+
+// Without a provider: registerSounds(myUiPack)
+// Self-hosting the files elsewhere: registerSounds(myUiPack, { baseUrl: 'https://my-cdn.com/my-ui-pack' })`}
+        </CodeBlock>
+        <p className="text-gray-600 mb-2">To turn your own folder of MP3s into a pack you can host anywhere:</p>
+        <CodeBlock language="bash">
+          {`npx react-sounds-cli pack ./my-sounds --name=my-sounds
+# writes ./my-sounds/manifest.json`}
+        </CodeBlock>
+        <CodeBlock language="json">
+          {`{
+  "name": "my-sounds",
+  "version": "1",
+  "baseUrl": "https://cdn.example.com/my-sounds",
+  "sounds": {
+    "click": { "src": "click.mp3", "duration": 0.04, "license": "CC0-1.0" },
+    "menu/open": { "src": "menu/open.mp3" }
+  }
+}`}
+        </CodeBlock>
+        <p className="text-gray-600 mb-2">
+          <code className={cn("font-mono bg-gray-200 px-1 rounded")}>baseUrl</code> is optional: without it, files are
+          resolved relative to where the manifest is hosted (or <code className={cn("font-mono bg-gray-200 px-1 rounded")}>/sounds/&lt;name&gt;</code> at runtime).
+          Only <code className={cn("font-mono bg-gray-200 px-1 rounded")}>src</code> is required per sound. Files must be MP3, and should never change at the same URL.
+        </p>
       </section>
 
       {/* Type Information */}

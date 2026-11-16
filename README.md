@@ -63,6 +63,30 @@ function Button() {
 }
 ```
 
+### Your own sounds and sound packs
+
+Any MP3 URL works (cross-origin files need CORS headers):
+
+```tsx
+const { play } = useSound('https://cdn.example.com/sounds/whoosh.mp3');
+```
+
+Or add a **sound pack**, a `manifest.json` listing MP3 files by name. The CLI writes the manifest and TypeScript types into your app:
+
+```bash
+npx react-sounds-cli add https://example.com/packs/my-ui-pack/manifest.json   # add --download to copy the files into public/
+```
+
+```tsx
+import myUiPack from './sounds/my-ui-pack.json';
+
+<SoundProvider packs={[myUiPack]}>...</SoundProvider>   // or registerSounds(myUiPack)
+
+const { play } = useSound('my-ui-pack/save');            // typed and autocompleted
+```
+
+Turn a folder of your own MP3s into a pack with `npx react-sounds-cli pack ./my-sounds`.
+
 ## 📚 Documentation
 
 For complete documentation including advanced usage, visit [reactsounds.com/docs](https://www.reactsounds.com/docs)

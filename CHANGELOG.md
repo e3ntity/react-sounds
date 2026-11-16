@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Sound packs: `registerSounds(pack, { baseUrl })` and the `SoundProvider` `packs` prop register a `manifest.json` of MP3s, played as `"pack-name/sound"`
+- `CustomSoundNames` interface for typed, autocompleted pack sound names (augmented by generated `.d.ts` files)
+- `resolveSoundUrl` helper and exported `SoundName`, `SoundPack` types
+- CLI: `add <manifest-url-or-path>` (with `--download`) writes a pack manifest and types into your app; `pack <dir>` creates a manifest for a folder of MP3s; `pick` downloads pack sounds too
+
+### Changed
+- Pack sounds load from `/sounds/<pack>/<sound>.mp3` first when downloaded locally, like built-in sounds
+- `SoundName` keeps editor autocompletion for known names while still accepting any string
+- Clearer error when a sound URL fails to load (mentions CORS)
+
 ## [1.0.30] - 2026-03-08
 
 ### Added
