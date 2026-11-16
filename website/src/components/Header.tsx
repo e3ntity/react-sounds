@@ -36,6 +36,14 @@ const Header: React.FC = () => {
           >
             GitHub
           </a>
+          <a
+            href="https://www.npmjs.com/package/react-sounds"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 hover:text-gray-900"
+          >
+            npm
+          </a>
           <button
             onClick={() => handleSoundToggle()}
             className={`p-2 rounded-full focus:outline-none cursor-pointer ${
