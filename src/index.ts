@@ -7,9 +7,13 @@ export {
   makeRemoteSound,
   playSound,
   preloadSounds,
+  registerSounds,
+  resolveSoundUrl,
   setCDNUrl,
   setSoundEnabled,
 } from "./runtime";
+export type { SoundName } from "./runtime";
+export type { CustomSoundNames, RegisterSoundsOptions, SoundPack, SoundPackSound } from "./packs";
 
 // Export hooks
 export { useSound, useSoundEnabled, useSoundOnChange } from "./hooks";

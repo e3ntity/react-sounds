@@ -4,11 +4,13 @@ import {
   isSoundEnabled,
   playSound,
   preloadSounds,
+  registerSounds,
   setSoundEnabled,
   SoundName,
   subscribeSoundState,
   unlockAudioContext,
 } from "./runtime";
+import { SoundPack } from "./packs";
 import { SoundOptions } from "./types";
 
 /**
@@ -179,6 +181,12 @@ interface SoundProviderProps {
   preload?: SoundName[];
 
   /**
+   * Sound packs to register (see `registerSounds`). They are registered before any
+   * child renders, so children can use pack sound names right away.
+   */
+  packs?: SoundPack[];
+
+  /**
    * Initial sound enabled state (uses localStorage if not provided)
    */
   initialEnabled?: boolean;
@@ -198,7 +206,12 @@ interface SoundProviderProps {
  * A provider that manages sound state and preloads sounds.
  * Will use locally downloaded sounds if available before falling back to CDN.
  */
-export function SoundProvider({ preload = [], initialEnabled, children }: SoundProviderProps): React.ReactElement {
+export function SoundProvider({ preload = [], packs, initialEnabled, children }: SoundProviderProps): React.ReactElement {
+  // Register during render (not in an effect): child effects run before parent effects,
+  // so children calling useSound with pack names need the packs to exist already.
+  // registerSounds is idempotent, so repeated renders are cheap and safe.
+  packs?.forEach((pack) => registerSounds(pack));
+
   // Initialize sound enabled state from props or runtime
   const [enabled, setEnabledState] = useState<boolean>(() => {
     if (initialEnabled !== undefined) return initialEnabled;

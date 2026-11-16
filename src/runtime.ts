@@ -1,8 +1,22 @@
 import { Howl, Howler } from "howler";
 import manifest from "./manifest.json";
+import {
+  __resetPacksForTesting,
+  addPack,
+  CustomSoundNames,
+  getPackSoundUrl,
+  isPackSoundName,
+  RegisterSoundsOptions,
+  SoundPack,
+} from "./packs";
 import { AudioPermissionStatus, LibrarySoundName, SoundOptions } from "./types";
 
-export type SoundName = LibrarySoundName | string;
+/**
+ * A built-in sound, a sound from a registered pack, or the URL of an MP3 file.
+ * (`string & {}` keeps editor autocompletion for the known names.)
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type SoundName = LibrarySoundName | keyof CustomSoundNames | (string & {});
 
 export function isLibrarySoundName(name: any): name is LibrarySoundName {
   return name in manifest.sounds;
@@ -93,7 +107,19 @@ export async function fetchSoundBlob(name: SoundName): Promise<Blob> {
     console.warn(`Error loading local sound "${name}", falling back to CDN:`, error);
   }
 
-  if (!isLibrarySoundName(name)) throw new Error(`Failed to load custom sound "${name}"`);
+  const packUrl = getPackSoundUrl(name);
+  if (packUrl) {
+    const response = await fetch(packUrl);
+    if (!response.ok) throw new Error(`Failed to fetch sound "${name}" from ${packUrl} (HTTP ${response.status})`);
+    return await response.blob();
+  }
+
+  if (!isLibrarySoundName(name)) {
+    throw new Error(
+      `Failed to load custom sound "${name}". ` +
+        "If this is a URL on another domain, make sure it serves an MP3 file with CORS headers (Access-Control-Allow-Origin)."
+    );
+  }
 
   // Fall back to CDN
   const soundInfo = manifest.sounds[name];
@@ -105,6 +131,26 @@ export async function fetchSoundBlob(name: SoundName): Promise<Blob> {
   }
 
   return await response.blob();
+}
+
+/**
+ * Register a sound pack so its sounds can be played by name, e.g. `useSound("my-ui-pack/save")`.
+ * Registering the same pack again is a no-op; registering a changed pack updates its sounds.
+ */
+export function registerSounds(pack: SoundPack, options?: RegisterSoundsOptions): void {
+  for (const name of addPack(pack, options)) {
+    // Drop stale data for sounds whose URL changed
+    delete soundBlobCache[name];
+    cleanupUnusedSound(name);
+  }
+}
+
+/**
+ * Resolve the URL a sound is loaded from (ignoring locally downloaded copies).
+ */
+export function resolveSoundUrl(name: SoundName): string {
+  if (isLibrarySoundName(name)) return `${cdnBaseUrl}/${manifest.sounds[name].src}`;
+  return getPackSoundUrl(name) ?? name;
 }
 
 /**
@@ -234,9 +280,13 @@ export function subscribeSoundState(callback: (enabled: boolean) => void): () =>
  * Get the local path for a sound when using the offline mode
  */
 export async function getLocalSoundPath(name: SoundName): Promise<string | null> {
-  if (!isLibrarySoundName(name)) return name;
+  const isPack = isPackSoundName(name);
+  if (!isLibrarySoundName(name) && !isPack) return name;
 
   const publicPath = `/sounds/${name}.mp3`;
+  // Pack files that are already served locally are loaded directly by fetchSoundBlob
+  if (isPack && getPackSoundUrl(name) === publicPath) return null;
+
   try {
     // Add a timeout of 300ms to quickly fall back to CDN if file isn't available
     const controller = new AbortController();
@@ -351,6 +401,7 @@ export function __resetForTesting(): void {
   audioUnlockInitialized = false;
   for (const key of Object.keys(soundBlobCache)) delete soundBlobCache[key];
   for (const key of Object.keys(howlInstanceCache)) delete howlInstanceCache[key];
+  __resetPacksForTesting();
 }
 
 // Initialize sound state
