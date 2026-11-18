@@ -7,6 +7,8 @@ const links = [
   { label: "More sounds on openfoley", href: "https://openfoley.com" },
   { label: "GitHub", href: "https://github.com/e3ntity/react-sounds" },
   { label: "npm", href: "https://www.npmjs.com/package/react-sounds" },
+  { label: "Privacy", to: "/privacy" },
+  { label: "Imprint", to: "/imprint" },
 ];
 
 const Footer: React.FC = () => {
