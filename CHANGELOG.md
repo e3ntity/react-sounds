@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-18
+
 ### Added
 - Sound packs: `registerSounds(pack, { baseUrl })` and the `SoundProvider` `packs` prop register a `manifest.json` of MP3s, played as `"pack-name/sound"`
 - `CustomSoundNames` interface for typed, autocompleted pack sound names (augmented by generated `.d.ts` files)
