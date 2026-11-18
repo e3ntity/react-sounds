@@ -150,7 +150,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-md mx-auto">
           <CodeBlock language="bash">npm install react-sounds howler</CodeBlock>
         </div>
-        <div className="flex justify-center gap-6 text-sm text-gray-600">
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600">
           <a
             href="https://www.npmjs.com/package/react-sounds"
             target="_blank"
@@ -173,6 +173,10 @@ const HomePage: React.FC = () => {
             </svg>
             View on GitHub
           </a>
+          <a href="https://openfoley.com" className="inline-flex items-center hover:text-gray-900">
+            <OpenfoleyMark className="h-4 w-4 mr-1.5" />
+            More sounds on openfoley
+          </a>
         </div>
       </div>
 
@@ -189,6 +193,28 @@ const HomePage: React.FC = () => {
       {/* Enhanced Demo Section */}
       <div className="mb-20">
         <AdvancedSoundDemo />
+      </div>
+
+      <div className="mb-20 grid grid-cols-1 md:grid-cols-2 items-center gap-8 rounded-lg bg-gray-900 p-6 sm:p-8 text-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-2">Need more sounds?</h2>
+          <p className="text-gray-300 mb-5">
+            openfoley is an open library of sound effects and sound packs made for react-sounds. Every sound is free
+            to use under CC0, and you can generate new ones with AI.
+          </p>
+          <a
+            href="https://openfoley.com"
+            className="inline-flex items-center bg-white hover:bg-blue-50 text-gray-900 font-bold py-2 px-4 rounded-lg transition"
+          >
+            <OpenfoleyMark className="h-5 w-5 mr-2" />
+            Browse openfoley
+          </a>
+        </div>
+        <div className="min-w-0">
+          <CodeBlock language="bash" className="my-0">
+            npx react-sounds-cli add https://openfoley.com/c/ui-sounds
+          </CodeBlock>
+        </div>
       </div>
 
       {/* Call to action before footer */}
@@ -221,5 +247,19 @@ const HomePage: React.FC = () => {
     </div>
   );
 };
+
+const OpenfoleyMark: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 100 100" className={className} aria-hidden>
+    <path d="M79 34 A34 34 0 1 0 79 66" fill="none" stroke="#93c5fd" strokeWidth="9" strokeLinecap="round" />
+    <path
+      d="M25 52 L35 33 L46 68 L57 33 L67 54 L86 40"
+      fill="none"
+      stroke="#2563eb"
+      strokeWidth="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 export default HomePage;

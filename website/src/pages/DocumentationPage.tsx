@@ -466,37 +466,41 @@ npx react-sounds-cli pick ui/click --output=./public/sounds`}
         <p className="text-gray-600 mb-2">
           A sound pack is a <code className={cn("font-mono bg-gray-200 px-1 rounded")}>manifest.json</code> that lists
           MP3 files by name. Add one with the CLI, which also generates TypeScript types so pack sound names
-          autocomplete like built-in ones:
+          autocomplete like built-in ones. You can find ready-made packs, or generate your own sounds, on{" "}
+          <a href="https://openfoley.com/collections" className="text-blue-600 hover:underline">
+            openfoley
+          </a>
+          :
         </p>
         <CodeBlock language="bash">
           {`# Use the pack's files from where they are hosted
-npx react-sounds-cli add https://example.com/packs/my-ui-pack/manifest.json
+npx react-sounds-cli add https://openfoley.com/c/ui-sounds
 
-# Or copy the files into your app (public/sounds/my-ui-pack)
-npx react-sounds-cli add https://example.com/packs/my-ui-pack/manifest.json --download`}
+# Or copy the files into your app (public/sounds/ui-sounds)
+npx react-sounds-cli add https://openfoley.com/c/ui-sounds --download`}
         </CodeBlock>
         <p className="text-gray-600 mb-2">
           Register the pack once and play its sounds as <code className={cn("font-mono bg-gray-200 px-1 rounded")}>"pack-name/sound"</code>:
         </p>
         <CodeBlock language="tsx">
           {`import { SoundProvider, useSound } from 'react-sounds';
-import myUiPack from './sounds/my-ui-pack.json';
+import uiSounds from './sounds/ui-sounds.json';
 
 function App() {
   return (
-    <SoundProvider packs={[myUiPack]}>
+    <SoundProvider packs={[uiSounds]}>
       <SaveButton />
     </SoundProvider>
   );
 }
 
 function SaveButton() {
-  const { play } = useSound('my-ui-pack/save');
+  const { play } = useSound('ui-sounds/bright-success-chime');
   return <button onClick={() => play()}>Save</button>;
 }
 
-// Without a provider: registerSounds(myUiPack)
-// Self-hosting the files elsewhere: registerSounds(myUiPack, { baseUrl: 'https://my-cdn.com/my-ui-pack' })`}
+// Without a provider: registerSounds(uiSounds)
+// Self-hosting the files elsewhere: registerSounds(uiSounds, { baseUrl: 'https://my-cdn.com/ui-sounds' })`}
         </CodeBlock>
         <p className="text-gray-600 mb-2">To turn your own folder of MP3s into a pack you can host anywhere:</p>
         <CodeBlock language="bash">

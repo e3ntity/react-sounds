@@ -17,7 +17,8 @@
 <p align="center">
   <a href="https://www.reactsounds.com" target="_blank">Demo</a> •
   <a href="https://www.reactsounds.com/docs" target="_blank">Documentation</a> •
-  <a href="https://www.reactsounds.com/sounds" target="_blank">Sound Explorer</a>
+  <a href="https://www.reactsounds.com/sounds" target="_blank">Sound Explorer</a> •
+  <a href="https://openfoley.com" target="_blank">More Sounds</a>
 </p>
 
 ## ✨ Why react-sounds?
@@ -74,18 +75,22 @@ const { play } = useSound('https://cdn.example.com/sounds/whoosh.mp3');
 Or add a **sound pack**, a `manifest.json` listing MP3 files by name. The CLI writes the manifest and TypeScript types into your app:
 
 ```bash
-npx react-sounds-cli add https://example.com/packs/my-ui-pack/manifest.json   # add --download to copy the files into public/
+npx react-sounds-cli add https://openfoley.com/c/ui-sounds   # add --download to copy the files into public/
 ```
 
 ```tsx
-import myUiPack from './sounds/my-ui-pack.json';
+import uiSounds from './sounds/ui-sounds.json';
 
-<SoundProvider packs={[myUiPack]}>...</SoundProvider>   // or registerSounds(myUiPack)
+<SoundProvider packs={[uiSounds]}>...</SoundProvider>   // or registerSounds(uiSounds)
 
-const { play } = useSound('my-ui-pack/save');            // typed and autocompleted
+const { play } = useSound('ui-sounds/bright-success-chime');   // typed and autocompleted
 ```
 
 Turn a folder of your own MP3s into a pack with `npx react-sounds-cli pack ./my-sounds`.
+
+## 🎨 More Sounds
+
+Need a sound that isn't built in? [openfoley](https://openfoley.com) is an open library of CC0 sound effects and sound packs that work with react-sounds out of the box. You can also generate new sounds there with AI.
 
 ## 📚 Documentation
 

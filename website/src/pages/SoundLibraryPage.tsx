@@ -473,7 +473,25 @@ const SoundLibraryPage: React.FC = () => {
               </button>
             </p>
           ) : (
-            <p className="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+            <>
+              <p className="mt-1 text-gray-500">Not in the library yet. Find it on openfoley or generate it with AI.</p>
+              <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
+                <a
+                  href={`https://openfoley.com/sounds?q=${encodeURIComponent(searchTerm.trim())}`}
+                  onClick={() => trackEvent("openfoley_click", { placement: "no_results_search" })}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                >
+                  Search openfoley for "{searchTerm.trim()}"
+                </a>
+                <a
+                  href={`https://openfoley.com/generate?prompt=${encodeURIComponent(searchTerm.trim())}`}
+                  onClick={() => trackEvent("openfoley_click", { placement: "no_results_generate" })}
+                  className="bg-white hover:bg-blue-50 text-blue-600 border border-blue-600 font-medium py-2 px-4 rounded-lg transition"
+                >
+                  Generate it with AI
+                </a>
+              </div>
+            </>
           )}
         </div>
       )}
@@ -592,6 +610,22 @@ const SoundLibraryPage: React.FC = () => {
           </nav>
         </div>
       )}
+
+      <div className="mt-12 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-lg bg-gray-50 p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800">Looking for something else?</h2>
+          <p className="text-gray-600">
+            Browse community sound packs on openfoley. All sounds are free to use under CC0 and work with react-sounds.
+          </p>
+        </div>
+        <a
+          href="https://openfoley.com/sounds"
+          onClick={() => trackEvent("openfoley_click", { placement: "library_footer" })}
+          className="shrink-0 bg-white hover:bg-blue-50 text-blue-600 border border-blue-600 font-medium py-2 px-4 rounded-lg transition text-center"
+        >
+          Browse openfoley
+        </a>
+      </div>
     </div>
   );
 };
