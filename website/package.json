@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run build:lib && vite",
-    "build": "rm -rf dist/ && npm run build:lib && npm run sync && vite build",
+    "build": "rm -rf dist/ && npm run build:lib && npm run sync && vite build && node scripts/prerender.mjs",
     "build:lib": "cd .. && npm install --legacy-peer-deps && npm run build",
     "sync": "cp ../src/manifest.json ../sounds/keywords.json ./src/",
     "lint": "eslint .",

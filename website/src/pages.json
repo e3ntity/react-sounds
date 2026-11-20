@@ -1,0 +1,54 @@
+{
+  "site": "https://www.reactsounds.com",
+  "pages": [
+    {
+      "path": "/",
+      "title": "react-sounds - Sound Effects for React",
+      "description": "react-sounds - Hundreds of ready-to-play sound effects for your React applications with a simple API, lazy loading, and offline support."
+    },
+    {
+      "path": "/sounds",
+      "title": "Sound Library | react-sounds",
+      "description": "Browse and play all built-in react-sounds sound effects: UI clicks, notifications, game and arcade sounds, ambience."
+    },
+    {
+      "path": "/docs",
+      "title": "Documentation | react-sounds",
+      "description": "How to install and use react-sounds: the useSound hook, Sound and SoundButton components, sound packs, custom sounds and offline support."
+    },
+    {
+      "path": "/guides",
+      "title": "Guides | react-sounds",
+      "description": "Practical guides on playing sounds and audio in React: the Audio API, Howler.js, use-sound and react-sounds."
+    },
+    {
+      "path": "/guides/play-sound-in-react",
+      "title": "How to Play Sounds in React | react-sounds",
+      "description": "Three ways to play sound effects in React: the HTML Audio element, the Web Audio API and a library. With code, autoplay rules and the pitfalls I ran into.",
+      "guide": true,
+      "heading": "How to Play Sounds in React",
+      "summary": "The HTML Audio element, the Web Audio API and libraries compared, with working code and the pitfalls I ran into.",
+      "date": "2026-11-20"
+    },
+    {
+      "path": "/guides/howler-react",
+      "title": "Using Howler.js in React | react-sounds",
+      "description": "How to use Howler.js in React without leaking audio: creating Howl instances in hooks, cleanup, sprites, volume and a reusable useHowl hook.",
+      "guide": true,
+      "heading": "Using Howler.js in React",
+      "summary": "How to wrap Howler.js in a small React hook that loads once, cleans up after itself and plays without delay.",
+      "date": "2026-11-20"
+    },
+    {
+      "path": "/guides/use-sound-vs-react-sounds",
+      "title": "use-sound vs react-sounds: Which React Sound Library? | react-sounds",
+      "description": "An honest comparison of use-sound and react-sounds, the two useSound hooks for React. API, sounds, bundle size and when to pick which.",
+      "guide": true,
+      "heading": "use-sound vs react-sounds",
+      "summary": "Both give you a useSound hook built on Howler.js. Here is where they differ and when I would pick which.",
+      "date": "2026-11-20"
+    },
+    { "path": "/privacy", "title": "Privacy Policy | react-sounds", "description": "Privacy policy of reactsounds.com." },
+    { "path": "/imprint", "title": "Imprint | react-sounds", "description": "Imprint of reactsounds.com." }
+  ]
+}

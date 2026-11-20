@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const links = [
   { label: "Docs", to: "/docs" },
   { label: "Sounds", to: "/sounds" },
+  { label: "Guides", to: "/guides" },
   { label: "More sounds on openfoley", href: "https://openfoley.com" },
   { label: "GitHub", href: "https://github.com/e3ntity/react-sounds" },
   { label: "npm", href: "https://www.npmjs.com/package/react-sounds" },

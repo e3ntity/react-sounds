@@ -6,6 +6,7 @@ import { cn } from "../utils/cn";
 const NAV = [
   { to: "/sounds", label: "Sounds" },
   { to: "/docs", label: "Docs" },
+  { to: "/guides", label: "Guides" },
 ];
 
 const EXTERNAL = [
