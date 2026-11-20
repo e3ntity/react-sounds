@@ -62,9 +62,20 @@ export type HowlEntry = { instance: Howl; subscriptions: number };
 const howlInstanceCache: Record<string, HowlEntry> = {};
 
 /**
+ * Which player a sound uses. Sounds play through an <audio> element (Howler's html5 mode), except
+ * looped plays: those use Web Audio, which repeats the decoded sound without the short pause an
+ * <audio> element makes every time it restarts. A sound that is played both ways gets one of each.
+ */
+export interface PlayerOptions {
+  loop?: boolean;
+}
+
+const cacheKey = (name: SoundName, { loop = false }: PlayerOptions = {}) => (loop ? `${name}\u0000loop` : name);
+
+/**
  * Make a sound loader function that first tries local files then falls back to CDN
  */
-export function makeRemoteSound(name: SoundName): () => Promise<HowlEntry> {
+export function makeRemoteSound(name: SoundName, options?: PlayerOptions): () => Promise<HowlEntry> {
   return async () => {
     // First fetch the blob data if not already in cache
     if (!soundBlobCache[name]) {
@@ -72,22 +83,23 @@ export function makeRemoteSound(name: SoundName): () => Promise<HowlEntry> {
     }
 
     // Create or return the Howl instance
-    return createOrGetHowlInstance(name);
+    return createOrGetHowlInstance(name, options);
   };
 }
 
-export async function claimSound(name: SoundName): Promise<Howl> {
-  const entry = await makeRemoteSound(name)();
+export async function claimSound(name: SoundName, options?: PlayerOptions): Promise<Howl> {
+  const entry = await makeRemoteSound(name, options)();
   entry.subscriptions += 1;
 
   return entry.instance;
 }
 
-export function freeSound(name: SoundName) {
-  const entry = howlInstanceCache[name];
+export function freeSound(name: SoundName, options?: PlayerOptions) {
+  const key = cacheKey(name, options);
+  const entry = howlInstanceCache[key];
   if (entry && entry.subscriptions > 0) entry.subscriptions -= 1;
 
-  cleanupUnusedSound(name);
+  cleanupUnusedSound(key);
 
   return null;
 }
@@ -156,10 +168,11 @@ export function resolveSoundUrl(name: SoundName): string {
 /**
  * Creates a Howl instance from a cached blob or fetches it if needed
  */
-async function createOrGetHowlInstance(name: SoundName): Promise<HowlEntry> {
+async function createOrGetHowlInstance(name: SoundName, options?: PlayerOptions): Promise<HowlEntry> {
+  const key = cacheKey(name, options);
   // Return existing instance if available
-  if (howlInstanceCache[name]) {
-    return howlInstanceCache[name];
+  if (howlInstanceCache[key]) {
+    return howlInstanceCache[key];
   }
 
   // Fetch the blob if not already in progress
@@ -173,11 +186,19 @@ async function createOrGetHowlInstance(name: SoundName): Promise<HowlEntry> {
   // Create object URL from blob
   const objectUrl = URL.createObjectURL(blob);
 
+  // Another call may have created it while the blob was loading
+  if (howlInstanceCache[key]) {
+    URL.revokeObjectURL(objectUrl);
+    return howlInstanceCache[key];
+  }
+
   // Create new Howl instance
   const howl = new Howl({
     src: [objectUrl],
     format: ["mp3"],
-    html5: true, // Enable streaming to reduce memory usage
+    // <audio> streams and keeps memory low; Web Audio (for loops) decodes the whole sound, so it can
+    // repeat it without a gap
+    html5: !options?.loop,
     onload: () => {
       // Store object URL reference to revoke later
       (howl as any)._objectUrl = objectUrl;
@@ -185,9 +206,9 @@ async function createOrGetHowlInstance(name: SoundName): Promise<HowlEntry> {
   });
 
   // Store in cache
-  howlInstanceCache[name] = { instance: howl, subscriptions: 0 };
+  howlInstanceCache[key] = { instance: howl, subscriptions: 0 };
 
-  return howlInstanceCache[name];
+  return howlInstanceCache[key];
 }
 
 /**
@@ -211,7 +232,8 @@ export function preloadSounds(names: SoundName[]): Promise<void[]> {
 export async function playSound(name: SoundName, options?: SoundOptions): Promise<void> {
   if (!isSoundEnabled()) return;
 
-  const sound = await claimSound(name);
+  const player = options?.loop ? { loop: true } : undefined;
+  const sound = await claimSound(name, player);
   let freed = false;
 
   if (options) {
@@ -222,7 +244,7 @@ export async function playSound(name: SoundName, options?: SoundOptions): Promis
 
   sound.on("end", () => {
     if (freed || options?.loop) return;
-    freeSound(name);
+    freeSound(name, player);
     freed = true;
   });
 

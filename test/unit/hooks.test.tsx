@@ -50,6 +50,31 @@ describe('useSound', () => {
     expect(typeof result.current.isPlaying).toBe('boolean');
   });
 
+  it('plays loops on a separate player and stops both', async () => {
+    const loopHowl = createMockHowl();
+    vi.mocked(claimSound).mockImplementation(async (_name, options) => (options?.loop ? loopHowl : mockHowl));
+    const { result } = await renderUseSound();
+
+    act(() => {
+      void result.current.play({ loop: true });
+    });
+    await act(async () => {});
+    expect(claimSound).toHaveBeenCalledWith('ui/toggle_on', { loop: true });
+    expect(loopHowl.loop).toHaveBeenCalledWith(true);
+    expect(loopHowl.play).toHaveBeenCalled();
+    expect(result.current.isPlaying).toBe(true);
+
+    await triggerPlay(result);
+    expect(mockHowl.play).toHaveBeenCalled();
+
+    act(() => result.current.stop());
+    expect(loopHowl.stop).toHaveBeenCalled();
+    expect(mockHowl.stop).toHaveBeenCalled();
+    expect(freeSound).toHaveBeenCalledWith('ui/toggle_on', { loop: true });
+    expect(freeSound).toHaveBeenCalledWith('ui/toggle_on');
+    expect(result.current.isPlaying).toBe(false);
+  });
+
   it('play() calls claimSound then plays', async () => {
     const { result } = await renderUseSound();
     await triggerPlay(result);

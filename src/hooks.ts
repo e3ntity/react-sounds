@@ -26,8 +26,9 @@ export function setSoundContext(context: SoundContextValue): void {
 export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}): SoundHookReturn {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const soundRef = useRef<Howl | null>(null);
-  const activeSoundsRef = useRef<Array<{ id: number; loop: boolean; resolver?: () => void }>>([]);
+  // One player for normal plays, one for looped plays (see PlayerOptions in runtime)
+  const playersRef = useRef<Record<PlayerKind, Howl | null>>({ once: null, loop: null });
+  const activeSoundsRef = useRef<Array<{ id: number; loop: boolean; howl: Howl; resolver?: () => void }>>([]);
 
   // Get sound enabled state from context if available, fall back to global state
   let enabled = isSoundEnabled();
@@ -37,15 +38,16 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
   } catch (_e) { /* SoundContext may not be available */ }
 
   // Lazy loading approach - only load the sound when needed
-  const ensureLoaded = useCallback(async (): Promise<Howl> => {
-    if (soundRef.current) return soundRef.current;
+  const ensureLoaded = useCallback(async (kind: PlayerKind): Promise<Howl> => {
+    const existing = playersRef.current[kind];
+    if (existing) return existing;
 
     try {
-      const howl = await claimSound(soundName);
+      const howl = await (kind === "loop" ? claimSound(soundName, { loop: true }) : claimSound(soundName));
 
       // Set up event listeners
       howl.on("end", (id) => {
-        const soundIndex = activeSoundsRef.current.findIndex((sound) => sound.id === id);
+        const soundIndex = activeSoundsRef.current.findIndex((sound) => sound.id === id && sound.howl === howl);
         if (soundIndex >= 0) {
           const sound = activeSoundsRef.current[soundIndex];
 
@@ -53,14 +55,14 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
           if (!sound.loop) activeSoundsRef.current.splice(soundIndex, 1);
         }
 
-        // Only update isPlaying state if no active sounds remain
-        if (activeSoundsRef.current.length === 0) {
-          soundRef.current = freeSound(soundName);
-          setIsPlaying(false);
+        // Free this player once none of its sounds are playing
+        if (!activeSoundsRef.current.some((sound) => sound.howl === howl) && playersRef.current[kind] === howl) {
+          playersRef.current[kind] = release(soundName, kind);
         }
+        if (activeSoundsRef.current.length === 0) setIsPlaying(false);
       });
 
-      soundRef.current = howl;
+      playersRef.current[kind] = howl;
       setIsLoaded(true);
       return howl;
     } catch (error) {
@@ -77,10 +79,10 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
         // Ensure audio context is unlocked before playing
         await unlockAudioContext();
 
-        // Ensure the sound is loaded
-        const howl = await ensureLoaded();
-
         const loop = options.loop !== undefined ? options.loop : false;
+        // Ensure the sound is loaded
+        const howl = await ensureLoaded(loop ? "loop" : "once");
+
         if (options.volume !== undefined) howl.volume(options.volume);
         if (options.rate !== undefined) howl.rate(options.rate);
         howl.loop(loop);
@@ -90,13 +92,13 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
 
         if (loop) {
           // For looped sounds, we just track them but don't resolve
-          activeSoundsRef.current.push({ id, loop });
+          activeSoundsRef.current.push({ id, loop, howl });
           return;
         }
 
         // For non-looped sounds, return a promise that resolves when the sound ends
         return new Promise<void>((resolve) => {
-          activeSoundsRef.current.push({ id, loop, resolver: () => resolve() });
+          activeSoundsRef.current.push({ id, loop, howl, resolver: () => resolve() });
         });
       } catch (error) {
         console.error("Error playing sound:", error);
@@ -107,33 +109,37 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
     [defaultOptions, enabled, ensureLoaded, isLoaded]
   );
 
-  const stop = useCallback(() => {
-    if (!soundRef.current) return;
-
+  const stopAll = useCallback(() => {
     // Resolve any pending promises
     activeSoundsRef.current.forEach((sound) => {
       if (sound.resolver) sound.resolver();
     });
-
-    soundRef.current.stop();
-    soundRef.current = freeSound(soundName);
     activeSoundsRef.current = [];
+
+    for (const kind of PLAYER_KINDS) {
+      const howl = playersRef.current[kind];
+      if (!howl) continue;
+      howl.stop();
+      playersRef.current[kind] = release(soundName, kind);
+    }
+  }, [soundName]);
+
+  const stop = useCallback(() => {
+    stopAll();
     setIsPlaying(false);
-  }, []);
+  }, [stopAll]);
 
   const pause = useCallback(() => {
-    if (!soundRef.current) return;
-
-    soundRef.current.pause();
+    for (const kind of PLAYER_KINDS) playersRef.current[kind]?.pause();
     setIsPlaying(false);
   }, []);
 
   const resume = useCallback(() => {
-    if (!soundRef.current || !enabled || activeSoundsRef.current.length === 0) return;
+    if (!enabled || activeSoundsRef.current.length === 0) return;
 
     // Try to unlock audio context before resuming
     unlockAudioContext().then(() => {
-      activeSoundsRef.current.forEach(({ id }) => soundRef.current?.play(id));
+      activeSoundsRef.current.forEach(({ id, howl }) => howl.play(id));
       setIsPlaying(true);
     });
   }, [enabled]);
@@ -149,22 +155,21 @@ export function useSound(soundName: SoundName, defaultOptions: SoundOptions = {}
     return () => {
       setIsLoaded(false);
       setIsPlaying(false);
-
-      activeSoundsRef.current.forEach((sound) => {
-        if (sound.resolver) sound.resolver(); // Resolve any pending promises
-      });
-      activeSoundsRef.current = [];
-
-      if (soundRef.current) {
-        soundRef.current.stop();
-        soundRef.current = freeSound(soundName);
-      }
+      stopAll();
     };
-  }, [soundName]);
+  }, [soundName, stopAll]);
 
   const checkPermission = useCallback(() => checkAudioPermission(), []);
 
   return { play, stop, pause, resume, isPlaying, isLoaded, checkPermission };
+}
+
+type PlayerKind = "once" | "loop";
+const PLAYER_KINDS: PlayerKind[] = ["once", "loop"];
+
+/** Free a hook's player; returns null to clear the ref */
+function release(soundName: SoundName, kind: PlayerKind): null {
+  return kind === "loop" ? freeSound(soundName, { loop: true }) : freeSound(soundName);
 }
 
 interface UseSoundOnChangeOptions extends SoundOptions {

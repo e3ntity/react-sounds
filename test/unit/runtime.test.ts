@@ -3,7 +3,9 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('howler', async () => {
   const { createMockHowl } = await import('./mocks');
   return {
-    Howl: vi.fn().mockImplementation(() => createMockHowl()),
+    Howl: vi.fn().mockImplementation(function () {
+      return createMockHowl();
+    }),
     Howler: { ctx: { state: 'running' }, noAudio: false },
   };
 });
@@ -18,9 +20,11 @@ import {
   playSound,
   checkAudioPermission,
   cleanupUnusedSound,
+  claimSound,
+  freeSound,
   __resetForTesting,
 } from '../../src/runtime';
-import { Howler } from 'howler';
+import { Howl, Howler } from 'howler';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -130,5 +134,33 @@ describe('checkAudioPermission', () => {
   it('returns "unavailable" when noAudio is true', async () => {
     (Howler as any).noAudio = true;
     expect(await checkAudioPermission()).toBe('unavailable');
+  });
+});
+
+describe('players', () => {
+  beforeEach(() => {
+    const blob = new Blob(['audio'], { type: 'audio/mp3' });
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, blob: () => Promise.resolve(blob) }));
+    vi.stubGlobal('URL', { ...URL, createObjectURL: vi.fn(() => 'blob:sound'), revokeObjectURL: vi.fn() });
+  });
+
+  it('plays loops through Web Audio and everything else through an <audio> element', async () => {
+    const once = await claimSound('ui/toggle_on');
+    const loop = await claimSound('ui/toggle_on', { loop: true });
+
+    expect(once).not.toBe(loop);
+    expect(vi.mocked(Howl).mock.calls.map(([options]) => options.html5)).toEqual([true, false]);
+    // Each kind of player is created once and shared
+    expect(await claimSound('ui/toggle_on', { loop: true })).toBe(loop);
+    expect(Howl).toHaveBeenCalledTimes(2);
+  });
+
+  it('frees the loop player separately', async () => {
+    const once = await claimSound('ui/toggle_on');
+    const loop = await claimSound('ui/toggle_on', { loop: true });
+    freeSound('ui/toggle_on', { loop: true });
+
+    expect(loop.unload).toHaveBeenCalled();
+    expect(once.unload).not.toHaveBeenCalled();
   });
 });
