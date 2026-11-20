@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-20
+
+### Changed
+- `play({ loop: true })` now plays through Web Audio instead of an `<audio>` element, so loops repeat without a gap. All other sounds play as before
+- On iPhones, looped sounds follow the silent switch, and their `volume` works
+
+### Fixed
+- Two plays starting at the same time no longer create two players for the same sound
+
 ## [1.1.0] - 2026-11-18
 
 ### Added
