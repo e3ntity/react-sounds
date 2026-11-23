@@ -1,6 +1,7 @@
 import CodeBlock from "@/components/CodeBlock";
 import { cn } from "@/utils/cn";
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { playSound } from "react-sounds";
 
 const DocumentationPage: React.FC = () => {
@@ -48,7 +49,22 @@ const DocumentationPage: React.FC = () => {
         <p className="text-gray-600 mb-4">
           <code className={cn("font-mono bg-gray-200 px-1 rounded")}>react-sounds</code> provides a library of
           ready-to-play sound effects for your React applications, designed to be lightweight, easy to use, and
-          flexible. It's built on top of Howler.js and provides a simple API for playing sounds in your React apps.
+          flexible. It's built on top of{" "}
+          <Link to="/guides/howler-react" className="text-blue-600 hover:underline">
+            Howler.js
+          </Link>{" "}
+          and provides a simple API for playing sounds in your React apps.
+        </p>
+        <p className="text-gray-600 mb-4">
+          Coming from use-sound? See{" "}
+          <Link to="/guides/use-sound-vs-react-sounds" className="text-blue-600 hover:underline">
+            use-sound vs react-sounds
+          </Link>{" "}
+          for the differences and how to switch. New to sound in React? Start with{" "}
+          <Link to="/guides/play-sound-in-react" className="text-blue-600 hover:underline">
+            how to play sounds in React
+          </Link>
+          .
         </p>
       </section>
 
@@ -121,7 +137,7 @@ yarn add react-sounds howler`}
           {`import { useSound } from 'react-sounds';
 
 function Button() {
-  const { play } = useSound('ui/button_1');
+  const { play } = useSound('ui/button_soft');
   
   return (
     <button onClick={() => play()}>
@@ -168,7 +184,7 @@ import customSound from '../assets/sounds/notification.mp3';
 
 function Button() {
   // You can use built-in sounds
-  const handleClick = () => playSound('ui/button_1');
+  const handleClick = () => playSound('ui/button_soft');
   
   // Or your own custom sounds
   const handleCustomSound = () => playSound(customSound);
@@ -202,7 +218,7 @@ function App() {
   return (
     <SoundProvider 
       // Optional: preload both built-in and custom sounds
-      preload={['ui/button_click', 'notification/success', customSound]} 
+      preload={['ui/button_soft', 'notification/success', customSound]} 
       // Optional: set initial sound enabled state (defaults to true)
       initialEnabled={true}
     >
@@ -238,7 +254,7 @@ function SoundPlayer() {
     isPlaying, // Boolean indicating if sound is currently playing
     isLoaded,  // Boolean indicating if sound has been loaded
     checkPermission, // Check browser audio permission status
-  } = useSound('ui/button_1');
+  } = useSound('ui/button_soft');
   
   // Using a custom sound file with options
   const { play: playCustom } = useSound(customSound, { 
@@ -287,7 +303,7 @@ import customNotification from '../assets/sounds/notification.mp3';
 function ActionButton({ onClick }) {
   return (
     <SoundButton 
-      sound="ui/click" // Can also use custom sound import
+      sound="ui/button_soft" // Can also use custom sound import
       soundOptions={{ volume: 0.7 }}
       onClick={onClick}
       onSoundError={(error) => console.error('Sound error:', error)}
@@ -388,7 +404,7 @@ async function checkAudio() {
 
 // Via the useSound hook
 function SoundPlayer() {
-  const { play, checkPermission } = useSound('ui/button_1');
+  const { play, checkPermission } = useSound('ui/button_soft');
 
   const handlePlay = async () => {
     const status = await checkPermission();
@@ -410,7 +426,7 @@ function SoundPlayer() {
 import customSound from '../assets/sounds/custom.mp3';
 
 // Preload multiple sounds at once (both built-in and custom)
-preloadSounds(['ui/button_1', 'notification/success', customSound])
+preloadSounds(['ui/button_soft', 'notification/success', customSound])
   .then(() => console.log('All sounds preloaded'))
   .catch((error) => console.error('Error preloading sounds:', error));`}
         </CodeBlock>
@@ -440,7 +456,7 @@ function SoundPlayer() {
     });
     
     // Direct play with options
-    playSound('ui/click', { volume: 0.5 });
+    playSound('ui/button_soft', { volume: 0.5 });
   };
   
   return <button onClick={playWithOptions}>Play with Options</button>;
@@ -456,10 +472,10 @@ function SoundPlayer() {
 npx react-sounds-cli list
 
 # Download specific sounds for offline use
-npx react-sounds-cli pick ui/click notification/success
+npx react-sounds-cli pick ui/button_soft notification/success
 
 # Download sounds to a custom directory
-npx react-sounds-cli pick ui/click --output=./public/sounds`}
+npx react-sounds-cli pick ui/button_soft --output=./public/sounds`}
         </CodeBlock>
 
         <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Sound Packs</h3>
@@ -554,7 +570,7 @@ function PlaySounds() {
   
   return (
     <div>
-      <button onClick={() => playUiSound('ui/click')}>UI Sound</button>
+      <button onClick={() => playUiSound('ui/button_soft')}>UI Sound</button>
       <button onClick={playCustomSound}>Custom Sound</button>
     </div>
   );

@@ -7,14 +7,18 @@ const UseSoundVsReactSounds: React.FC = () => (
   <Guide path="/guides/use-sound-vs-react-sounds">
     <p>
       If you search for a way to play sounds in React, you'll quickly find two libraries that both give you a{" "}
-      <code>useSound</code> hook: <a href="https://github.com/joshwcomeau/use-sound">use-sound</a> by Josh Comeau and
+      <code>useSound</code> hook: <a href="https://github.com/joshwcomeau/use-sound">use-sound</a> by Josh Comeau and{" "}
       <Link to="/">react-sounds</Link>, which I built. Both are MIT-licensed, both are written in TypeScript and both use{" "}
       <Link to="/guides/howler-react">Howler.js</Link> under the hood. So which one should you use?
     </p>
     <p>
       I'm obviously biased, so I'll try to keep this as factual as possible and also say where use-sound is the better
-      choice. The short version: use-sound is a minimal hook for audio files you bring yourself; react-sounds adds a
-      library of ready-made sounds and some app-level features on top.
+      choice.
+    </p>
+    <p>
+      <strong>TL;DR:</strong> use-sound is a minimal hook for audio files you bring yourself. react-sounds adds a library
+      of ready-made sounds, components and an app-wide mute on top. If you have your own files and need sprites, use
+      use-sound. If you don't have sounds yet or play them in many places, use react-sounds.
     </p>
 
     <h2>The basic API</h2>
@@ -107,6 +111,11 @@ function LikeButton() {
           <td>CDN by default, CLI downloads sounds into your app</td>
         </tr>
         <tr>
+          <td>Bundle size (gzipped)</td>
+          <td>~1 KB, plus Howler (~10 KB) loaded lazily</td>
+          <td>~5 KB, plus Howler (~10 KB). Sounds load from the CDN when used</td>
+        </tr>
+        <tr>
           <td>Latest release</td>
           <td>5.0.0 (February 2025)</td>
           <td>1.1.0 (November 2026)</td>
@@ -177,6 +186,33 @@ const { play, stop } = useSound("/sounds/pop.mp3", {
       Note that <code>playbackRate</code> is called <code>rate</code> in react-sounds. If you used the{" "}
       <code>soundEnabled</code> option for muting, you can drop it and use <code>useSoundEnabled()</code> once in your
       settings instead.
+    </p>
+
+    <h2>FAQ</h2>
+    <h3>Do they work with Next.js and server-side rendering?</h3>
+    <p>
+      Yes, both. Sounds only load and play in the browser, so use them in client components with{" "}
+      <code>"use client"</code> and trigger them from events or effects.
+    </p>
+    <h3>Do they work with React 19?</h3>
+    <p>
+      Yes. react-sounds supports React 16.8 to 19, use-sound any React version with hooks (16.8 and up).
+    </p>
+    <h3>Do I need to install Howler myself?</h3>
+    <p>
+      For react-sounds, yes: <code>npm install react-sounds howler</code>. use-sound installs it as a regular
+      dependency.
+    </p>
+    <h3>How do I mute all sounds?</h3>
+    <p>
+      In react-sounds, call <code>useSoundEnabled()</code> anywhere. It returns <code>[enabled, setEnabled]</code> and
+      remembers the setting between visits. In use-sound, pass <code>soundEnabled</code> to every hook, or use the{" "}
+      <Link to="/guides/howler-react">Howler global</Link> to mute everything at once.
+    </p>
+    <h3>Can I use sprites with react-sounds?</h3>
+    <p>
+      Not at the moment. If you rely on sprites, use-sound is the better choice. In react-sounds, each sound is its own
+      file, and sounds used in several places are only loaded once.
     </p>
 
     <h2>Conclusion</h2>

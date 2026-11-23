@@ -17,6 +17,9 @@ const HowlerReact: React.FC = () => (
       plays without delay. It's roughly what <Link to="/">react-sounds</Link> does under the hood, so it's also a good way to understand how
       the sound hooks work.
     </p>
+    <p>
+      If you just want the code, skip to <a href="#usehowl">the useHowl hook</a>.
+    </p>
 
     <h2>Installing Howler</h2>
     <CodeBlock language="bash">{`npm install howler
@@ -66,7 +69,7 @@ function LikeButton() {
       SSR frameworks.
     </p>
 
-    <h2>A reusable useHowl hook</h2>
+    <h2 id="usehowl">A reusable useHowl hook</h2>
     <p>Writing that in every component gets old quickly, so let's move it into a hook:</p>
     <CodeBlock>{`import { Howl, type HowlOptions } from "howler";
 import { useCallback, useEffect, useRef } from "react";

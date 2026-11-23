@@ -11,6 +11,7 @@ import PlaySoundInReact from "./pages/guides/PlaySoundInReact";
 import UseSoundVsReactSounds from "./pages/guides/UseSoundVsReactSounds";
 import HomePage from "./pages/HomePage";
 import ImprintPage from "./pages/ImprintPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SoundLibraryPage from "./pages/SoundLibraryPage";
 
@@ -36,6 +37,7 @@ const App: React.FC = () => {
           <Route path="/guides/use-sound-vs-react-sounds" element={<UseSoundVsReactSounds />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/imprint" element={<ImprintPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />

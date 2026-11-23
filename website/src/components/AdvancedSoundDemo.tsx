@@ -53,7 +53,7 @@ const BasicSoundButtons: React.FC = () => {
         {`import { useSound } from 'react-sounds';
 
 function Button() {
-  const { play } = useSound('ui/button_1');
+  const { play } = useSound('ui/button_soft');
   return <button onClick={play}>Click Me</button>;
 }`}
       </CodeBlock>

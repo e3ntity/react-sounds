@@ -1,0 +1,33 @@
+# react-sounds
+
+> react-sounds is an open source (MIT) React library for playing sound effects. It gives you a `useSound` hook, `Sound` and `SoundButton` components and an app-wide mute, and comes with ready-to-play sounds (UI, notification, game, ambient) that load from a CDN when used. More free CC0 sounds and sound packs are on openfoley (https://openfoley.com).
+
+Install with `npm install react-sounds howler`, then:
+
+```tsx
+import { useSound } from "react-sounds";
+
+function Button() {
+  const { play } = useSound("ui/button_soft");
+  return <button onClick={() => play()}>Click Me</button>;
+}
+```
+
+Any MP3 URL works in place of a built-in sound name. Sound packs from openfoley are added with `npx react-sounds-cli add https://openfoley.com/c/ui-sounds`, which writes a manifest and TypeScript types into your app.
+
+## Docs
+
+- [Full reference in one file](https://www.reactsounds.com/llms-full.txt): README, API and every built-in sound name
+- [Documentation](https://www.reactsounds.com/docs): installation, hooks, components, sound packs, offline use
+- [Sound library](https://www.reactsounds.com/sounds): browse and play the built-in sounds
+- [GitHub](https://github.com/e3ntity/react-sounds) and [npm](https://www.npmjs.com/package/react-sounds)
+
+## Guides
+
+- [How to play sounds in React](https://www.reactsounds.com/guides/play-sound-in-react): the HTML Audio element, the Web Audio API and libraries compared
+- [Using Howler.js in React](https://www.reactsounds.com/guides/howler-react): a small hook that loads once and cleans up after itself
+- [use-sound vs react-sounds](https://www.reactsounds.com/guides/use-sound-vs-react-sounds): when to pick which, and how to switch
+
+## Optional
+
+- [openfoley](https://openfoley.com): free CC0 sound effects and sound packs that work with react-sounds, and AI sound generation

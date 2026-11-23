@@ -3,7 +3,7 @@
   "pages": [
     {
       "path": "/",
-      "title": "react-sounds - Sound Effects for React",
+      "title": "react-sounds - Free Sound Effects for React Apps",
       "description": "react-sounds - Hundreds of ready-to-play sound effects for your React applications with a simple API, lazy loading, and offline support."
     },
     {
@@ -13,7 +13,7 @@
     },
     {
       "path": "/docs",
-      "title": "Documentation | react-sounds",
+      "title": "Docs: useSound Hook, Sound and SoundButton | react-sounds",
       "description": "How to install and use react-sounds: the useSound hook, Sound and SoundButton components, sound packs, custom sounds and offline support."
     },
     {
@@ -32,7 +32,7 @@
     },
     {
       "path": "/guides/howler-react",
-      "title": "Using Howler.js in React | react-sounds",
+      "title": "Howler.js in React: a useHowl Hook with Cleanup and Sprites | react-sounds",
       "description": "How to use Howler.js in React without leaking audio: creating Howl instances in hooks, cleanup, sprites, volume and a reusable useHowl hook.",
       "guide": true,
       "heading": "Using Howler.js in React",
