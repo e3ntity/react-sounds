@@ -35,12 +35,13 @@
 |---|---|---|---|
 | Built-in sounds | 72+ | None | None |
 | React hooks & components | Yes | Hooks | None |
-| Bundle impact | ~0 KB (CDN-loaded) | User-bundled | ~7 KB gzipped |
+| Bundle size (gzipped) | ~5 KB + howler, sounds load from a CDN when used | ~1 KB + howler (loaded lazily) | ~10 KB |
 | TypeScript | Built-in | Built-in | @types |
-| Next.js ready | Yes | Manual setup | Manual setup |
-| Last release | Mar 2026 | Feb 2025 | Sep 2023 |
+| Last release | Nov 2026 | Feb 2025 | Sep 2023 |
 
 > **react-sounds** wraps howler.js and adds a curated sound library, React components, and zero-config CDN delivery. [use-sound](https://github.com/joshwcomeau/use-sound) and [howler.js](https://howlerjs.com) are great standalone options if you bring your own audio files.
+
+Coming from use-sound? See [use-sound vs react-sounds](https://www.reactsounds.com/guides/use-sound-vs-react-sounds) for a detailed comparison and how to switch.
 
 ## 🚀 Quick Start
 
@@ -54,7 +55,7 @@ yarn add react-sounds howler
 import { useSound } from 'react-sounds';
 
 function Button() {
-  const { play } = useSound('ui/button_1');
+  const { play } = useSound('ui/button_soft');
   
   return (
     <button onClick={() => play()}>
@@ -88,6 +89,20 @@ const { play } = useSound('ui-sounds/bright-success-chime');   // typed and auto
 
 Turn a folder of your own MP3s into a pack with `npx react-sounds-cli pack ./my-sounds`.
 
+## 🧰 API at a Glance
+
+| | What it does |
+|---|---|
+| `useSound(name, options)` | Returns `play`, `stop`, `pause`, `resume`, `isPlaying` and `isLoaded` for a sound |
+| `useSoundOnChange(name, value)` | Plays a sound whenever `value` changes |
+| `useSoundEnabled()` | App-wide mute toggle, remembered in `localStorage` |
+| `<Sound name="..." trigger="mount" />` | Plays a sound when it mounts or unmounts, without a hook |
+| `<SoundButton sound="...">` | A button that plays a sound on click |
+| `<SoundProvider preload={[...]} packs={[...]}>` | Preloads sounds and registers sound packs |
+| `registerSounds(pack)`, `preloadSounds(names)` | The same outside of React |
+
+Every option is in the [documentation](https://www.reactsounds.com/docs).
+
 ## 🎨 More Sounds
 
 Need a sound that isn't built in? [openfoley](https://openfoley.com) is an open library of CC0 sound effects and sound packs that work with react-sounds out of the box. You can also generate new sounds there with AI.
@@ -95,6 +110,11 @@ Need a sound that isn't built in? [openfoley](https://openfoley.com) is an open 
 ## 📚 Documentation
 
 For complete documentation including advanced usage, visit [reactsounds.com/docs](https://www.reactsounds.com/docs)
+
+Guides:
+- [How to play sounds in React](https://www.reactsounds.com/guides/play-sound-in-react): the Audio element, the Web Audio API and libraries compared
+- [Using Howler.js in React](https://www.reactsounds.com/guides/howler-react): a small hook that loads once and cleans up after itself
+- [use-sound vs react-sounds](https://www.reactsounds.com/guides/use-sound-vs-react-sounds): when to pick which, and how to switch
 
 ## 🎮 Live Demo
 
@@ -106,7 +126,7 @@ Browse and play all available sounds at [reactsounds.com/sounds](https://www.rea
 
 ## 💻 Browser Support
 
-Works in all modern browsers that support the Web Audio API (Chrome, Firefox, Safari, Edge)
+Works in all modern browsers (Chrome, Firefox, Safari, Edge). Sounds play through the Web Audio API, with an HTML5 Audio fallback from howler.js.
 
 ## 📄 License
 

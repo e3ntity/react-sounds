@@ -1,7 +1,7 @@
 {
   "name": "react-sounds",
   "version": "1.2.0",
-  "description": "A library of ready-to-play sound effects for React applications.",
+  "description": "Play sound effects in React with a useSound hook: hundreds of ready-to-play sounds, typed sound packs and an app-wide mute.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -89,7 +89,7 @@
   "bugs": {
     "url": "https://github.com/e3ntity/react-sounds/issues"
   },
-  "homepage": "https://reactsounds.com",
+  "homepage": "https://www.reactsounds.com",
   "dependencies": {
     "howler": "^2.2.3"
   }
