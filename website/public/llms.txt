@@ -15,6 +15,8 @@ function Button() {
 
 Any MP3 URL works in place of a built-in sound name. Sound packs from openfoley are added with `npx react-sounds-cli add https://openfoley.com/c/ui-sounds`, which writes a manifest and TypeScript types into your app.
 
+AI agents can search openfoley's sounds (and, with an API token, generate them and build sound packs) through its MCP server: `claude mcp add --transport http openfoley https://openfoley.com/mcp`. Setup: https://openfoley.com/docs#agents
+
 ## Docs
 
 - [Full reference in one file](https://www.reactsounds.com/llms-full.txt): README, API and every built-in sound name

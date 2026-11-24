@@ -107,6 +107,14 @@ Every option is in the [documentation](https://www.reactsounds.com/docs).
 
 Need a sound that isn't built in? [openfoley](https://openfoley.com) is an open library of CC0 sound effects and sound packs that work with react-sounds out of the box. You can also generate new sounds there with AI.
 
+Using an AI coding agent? Add the openfoley MCP server and just ask for the sound you need, e.g. "add a soft click to the buttons":
+
+```bash
+claude mcp add --transport http openfoley https://openfoley.com/mcp
+```
+
+Searching works without an account. To let your agent generate sounds and build sound packs, add an [API token](https://openfoley.com/docs#agents).
+
 ## 📚 Documentation
 
 For complete documentation including advanced usage, visit [reactsounds.com/docs](https://www.reactsounds.com/docs)

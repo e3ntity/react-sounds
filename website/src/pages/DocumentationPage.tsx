@@ -539,6 +539,22 @@ function SaveButton() {
           resolved relative to where the manifest is hosted (or <code className={cn("font-mono bg-gray-200 px-1 rounded")}>/sounds/&lt;name&gt;</code> at runtime).
           Only <code className={cn("font-mono bg-gray-200 px-1 rounded")}>src</code> is required per sound. Files must be MP3, and should never change at the same URL.
         </p>
+
+        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-3">Add Sounds with Your AI Agent</h3>
+        <p className="text-gray-600 mb-2">
+          openfoley has an MCP server, so coding agents like Claude Code and Cursor can search for sounds and wire them
+          up with react-sounds for you. Just ask, e.g. &ldquo;add a soft click to the buttons&rdquo;:
+        </p>
+        <CodeBlock language="bash">
+          {`claude mcp add --transport http openfoley https://openfoley.com/mcp`}
+        </CodeBlock>
+        <p className="text-gray-600 mb-2">
+          Searching works without an account. To let your agent generate new sounds and build sound packs, add an{" "}
+          <a href="https://openfoley.com/docs#agents" className="text-blue-600 hover:underline">
+            openfoley API token
+          </a>
+          .
+        </p>
       </section>
 
       {/* Type Information */}
