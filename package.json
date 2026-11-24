@@ -1,6 +1,6 @@
 {
   "name": "react-sounds",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Play sound effects in React with a useSound hook: hundreds of ready-to-play sounds, typed sound packs and an app-wide mute.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
